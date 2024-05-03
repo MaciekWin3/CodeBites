@@ -13,6 +13,9 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
 {
+    options.SwaggerDoc("v1", new OpenApiInfo { Title = "HS2 API", Version = "v1" });
+    options.CustomSchemaIds(i => i.Name);
+
     options.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
     {
         In = ParameterLocation.Header,
@@ -21,6 +24,11 @@ builder.Services.AddSwaggerGen(options =>
     });
 
     options.OperationFilter<SecurityRequirementsOperationFilter>();
+
+    options.DocInclusionPredicate((_, api) => true);
+
+    options.TagActionsBy(api => new[] { api.GroupName });
+    options.EnableAnnotations();
 });
 
 builder.Services.AddDbContext<DataContext>(options =>
