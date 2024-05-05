@@ -1,4 +1,6 @@
+using API.Data;
 using API.Repo;
+using API.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
@@ -34,6 +36,9 @@ builder.Services.AddSwaggerGen(options =>
 builder.Services.AddDbContext<DataContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("CodeBitesDb"))
 );
+
+builder.Services.AddTransient<IGistRepository, GistRepository>();
+builder.Services.AddTransient<IGistService, GistService>();
 
 builder.Services.AddAuthorization();
 
