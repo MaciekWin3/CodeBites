@@ -10,17 +10,25 @@ namespace API.Data
 
         public async Task<List<Gist>> GetUserGistsAsync(string email)
         {
-            return await context.Gists.Where(g => g.Owner.Email == email).ToListAsync();
+            return await context.Gists
+                .Include(g => g.Owner)
+                .Where(g => g.Owner.Email == email)
+                .ToListAsync();
         }
 
         public async Task<List<Gist>> GetPublicGistsAsync()
         {
-            return await context.Gists.Where(g => g.Public).ToListAsync();
+            return await context.Gists
+                .Include(g => g.Owner)
+                .Where(g => g.Public)
+                .ToListAsync();
         }
 
         public async Task<Gist?> GetByIdAsync(Guid id)
         {
-            return await context.Gists.FirstOrDefaultAsync(g => g.Id == id);
+            return await context.Gists
+                .Include(g => g.Owner)
+                .FirstOrDefaultAsync(g => g.Id == id);
         }
 
         public async Task<Gist> CreateAsync(Gist gist)
